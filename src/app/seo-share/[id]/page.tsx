@@ -10,9 +10,15 @@ export async function generateMetadata({
   const id = (await params).id;
   // 유효한 id는 "1", "2", "3", "4"입니다. 유효하지 않은 경우 "1"을 기본으로 사용합니다.
   const validIds = ['1', '2', '3', '4'];
-  const image = validIds.includes(id) ? `/${id}.jpg` : `/1.jpg`;
-
+  
+  // 이미지 경로 수정 - public 폴더 내의 이미지를 명시적으로 지정
+  const imageId = validIds.includes(id) ? id : '1';
+  
+  // baseUrl 설정 확인
   const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
+  
+  // 절대 URL 경로로 이미지 지정
+  const imageUrl = `${baseUrl}/${imageId}.jpg`;
 
   return {
     metadataBase: new URL(baseUrl),
@@ -23,10 +29,10 @@ export async function generateMetadata({
       title: `Social Share Example ${id} - My NextJS App`,
       description:
         'Learn how to dynamically assign meta tags with fixed images for rich social media previews.',
-      url: `${baseUrl}/seo-share/${id}`,
+      url: `${baseUrl}/${id}`,
       images: [
         {
-          url: image,
+          url: imageUrl,  // 수정된 이미지 URL 사용
           width: 1200,
           height: 630,
           alt: `Social Share Image ${id}`,
@@ -39,7 +45,7 @@ export async function generateMetadata({
       title: `Social Share Example ${id} - My NextJS App`,
       description:
         'Experience enhanced social media sharing with fixed images using OpenGraph and Twitter Card meta tags.',
-      images: [image],
+      images: [imageUrl],  // 수정된 이미지 URL 사용
     },
   };
 }
